@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0e1014">
+<title>Ein Geschenk für dich</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='11' width='24' height='18' rx='3' fill='%2323262e'/%3E%3Crect x='2' y='7' width='28' height='7' rx='2' fill='%232d3039'/%3E%3Crect x='13.5' y='7' width='5' height='22' fill='%232aa7ff'/%3E%3C/svg%3E">
+<meta name="description" content="Da wartet etwas auf dich. Aufmachen!">
+<link rel="stylesheet" href="raid.css">
+<link rel="stylesheet" href="zerstoerung.css">
+<style>
+:root {
+  --nacht: #0e1014;
+  --trikot: #17191f;
+  --trikot-hell: #2b2e36;
+  --weiss: #f6f3ee;
+  --grau: #aeb2bb;
+  --blau: #2aa7ff;
+  --bart: #e8743b;
+  --gelb: #ffd24a;
+  --pink: #f0529c;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body {
+  background:
+    radial-gradient(90vmax 60vmax at 50% 112%, rgba(232, 116, 59, .34), transparent 62%),
+    radial-gradient(60vmax 40vmax at 50% -12%, rgba(42, 167, 255, .16), transparent 65%),
+    var(--nacht);
+  color: var(--weiss);
+  font-family: ui-rounded, "SF Pro Rounded", "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+main {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+/* Geschenk */
+#geschenk-szene { display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 2.5vh, 24px); text-align: center; transition: opacity .4s ease; }
+#geschenk-szene.weg { opacity: 0; pointer-events: none; }
+h1 { margin: 0; font-weight: 800; letter-spacing: -.02em; }
+.fuer { font-size: clamp(2.2rem, 7vw, 4rem); line-height: 1.05; }
+.hinweis { margin: 0; color: var(--grau); font-size: clamp(1rem, 2.6vw, 1.15rem); animation: atmen 2.4s ease-in-out infinite; }
+#oeffnen {
+  position: relative;
+  width: min(78vw, 44vh, 340px);
+  aspect-ratio: 320 / 340;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 24px;
+  outline-offset: 8px;
+  touch-action: manipulation;
+}
+#oeffnen:focus-visible { outline: 3px solid var(--blau); }
+#oeffnen svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 26px rgba(232, 116, 59, .28)); }
+.ruht svg { animation: warten 3.6s ease-in-out infinite; transform-origin: 50% 90%; }
+#oeffnen:hover svg { filter: drop-shadow(0 0 22px rgba(42, 167, 255, .45)); }
+.deckel { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .85s cubic-bezier(.2, .8, .3, 1), opacity .7s ease .15s; }
+.licht { opacity: 0; transition: opacity .5s ease; }
+.oeffnet svg { animation: ruetteln .42s ease-in-out; }
+.offen .deckel { transform: translateY(-300px) rotate(-22deg); opacity: 0; }
+.offen .licht { opacity: 1; }
+
+/* Video */
+#buehne { width: min(100%, 1200px); opacity: 0; transition: opacity .55s ease; }
+#buehne.da { opacity: 1; }
+.rahmen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100%, calc((100dvh - 32px) * 16 / 9));
+  margin-inline: auto;
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .07);
+}
+video, #yt, #yt iframe { display: block; width: 100%; height: 100%; border: 0; }
+#laedt { position: absolute; inset: 0; display: grid; place-items: center; color: var(--grau); pointer-events: none; }
+#start {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  min-height: 52px; padding: 0 26px;
+  font: inherit; font-size: 1.1rem; font-weight: 800;
+  color: var(--nacht); background: var(--weiss);
+  border: 0; border-radius: 999px; cursor: pointer;
+}
+
+/* Karte */
+#karte {
+  width: min(100%, 620px);
+  padding: clamp(26px, 6vw, 48px);
+  background: var(--trikot);
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .08);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: auftauchen .7s cubic-bezier(.2, .8, .3, 1) both;
+}
+#karte::after {
+  content: ""; position: absolute; inset: auto -20% -46% -20%; height: 90%;
+  background: repeating-linear-gradient(-18deg, transparent 0 34px, rgba(255, 255, 255, .05) 34px 62px);
+  pointer-events: none;
+}
+#karte > * { position: relative; z-index: 1; }
+.winkel { display: block; width: 92px; height: 30px; margin: 0 auto 16px; }
+#titel { font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1.08; text-wrap: balance; }
+#text { margin: 18px 0 0; }
+#text p { margin: 0 0 12px; font-size: clamp(1.05rem, 3vw, 1.25rem); line-height: 1.5; color: #dcdde1; text-wrap: pretty; }
+#von { margin: 22px 0 0; font-weight: 800; font-size: 1.15rem; color: var(--bart); }
+#nochmal, .leise {
+  margin-top: 26px; min-height: 48px; padding: 0 24px;
+  font: inherit; font-weight: 700; color: var(--weiss);
+  background: transparent; border: 2px solid rgba(255, 255, 255, .28); border-radius: 999px; cursor: pointer;
+}
+#nochmal:hover, #nochmal:focus-visible, .leise:hover, .leise:focus-visible { border-color: var(--blau); color: #fff; outline: none; }
+#fehler { color: var(--grau); text-align: center; margin: 14px 0 0; }
+#fehler p { margin: 0; }
+#fehler .leise { margin-top: 12px; }
+
+canvas#konfetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+@keyframes warten { 0%, 86%, 100% { transform: rotate(0); } 89% { transform: rotate(-3deg); } 92% { transform: rotate(3deg); } 95% { transform: rotate(-2deg); } 98% { transform: rotate(1deg); } }
+@keyframes ruetteln { 0%, 100% { transform: rotate(0) scale(1); } 20% { transform: rotate(-6deg) scale(1.03); } 45% { transform: rotate(6deg) scale(1.05); } 70% { transform: rotate(-4deg) scale(1.03); } }
+@keyframes atmen { 0%, 100% { opacity: .65; } 50% { opacity: 1; } }
+@keyframes auftauchen { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (max-height: 480px) {
+  #karte { width: min(100%, 720px); padding: 16px 24px; }
+  .winkel { display: none; }
+  #titel { font-size: 1.7rem; }
+  #text { margin-top: 8px; }
+  #text p { font-size: .98rem; line-height: 1.35; margin-bottom: 6px; }
+  #von { margin-top: 8px; font-size: 1rem; }
+  #nochmal { margin-top: 10px; min-height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ruht svg, .hinweis, .oeffnet svg, #karte { animation: none; }
+  .deckel { transition: opacity .2s; }
+  .offen .deckel { transform: none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <section id="raid" hidden></section>
+
+  <section id="geschenk-szene">
+    <h1 class="fuer">Für <span id="name">Felix</span></h1>
+    <button id="oeffnen" class="ruht" type="button" aria-label="Geschenk öffnen">
+      <svg viewBox="0 0 320 340" aria-hidden="true">
+        <defs>
+          <clipPath id="koerper"><rect x="40" y="130" width="240" height="196" rx="14"/></clipPath>
+          <linearGradient id="band" x1="0" x2="1"><stop offset="0" stop-color="#1878c9"/><stop offset=".5" stop-color="#2aa7ff"/><stop offset="1" stop-color="#1878c9"/></linearGradient>
+          <radialGradient id="schein" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe3a8" stop-opacity=".95"/><stop offset=".55" stop-color="#ffb35a" stop-opacity=".45"/><stop offset="1" stop-color="#ffb35a" stop-opacity="0"/></radialGradient>
+          <filter id="leuchten" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+        </defs>
+        <ellipse class="licht" cx="160" cy="110" rx="170" ry="140" fill="url(#schein)"/>
+        <!-- Karton im Trikot-Design -->
+        <rect x="40" y="130" width="240" height="196" rx="14" fill="#23262e" stroke="#4a4e59" stroke-width="1.5"/>
+        <g clip-path="url(#koerper)">
+          <path d="M20 340 L300 214 L300 244 L20 370 Z" fill="#3a3e48"/>
+          <path d="M20 296 L300 170 L300 192 L20 318 Z" fill="#3a3e48" opacity=".7"/>
+          <rect x="40" y="300" width="240" height="8" fill="#f6f3ee"/>
+        </g>
+        <g fill="none" stroke="#f6f3ee" stroke-width="9" stroke-linejoin="miter" stroke-linecap="butt">
+          <path d="M60 188 L84 170 L108 188"/><path d="M60 214 L84 196 L108 214"/><path d="M60 240 L84 222 L108 240"/>
+          <path d="M212 188 L236 170 L260 188"/><path d="M212 214 L236 196 L260 214"/><path d="M212 240 L236 222 L260 240"/>
+        </g>
+        <rect x="143" y="130" width="34" height="196" fill="#2aa7ff" opacity=".5" filter="url(#leuchten)"/>
+        <rect x="145" y="130" width="30" height="196" fill="url(#band)"/>
+        <!-- Deckel mit Headset als Schleife -->
+        <g class="deckel">
+          <rect x="26" y="92" width="268" height="54" rx="12" fill="#2d3039" stroke="#50545f" stroke-width="1.5"/>
+          <rect x="145" y="92" width="30" height="54" fill="url(#band)"/>
+          <path d="M92 76 C96 8 224 8 228 76" fill="none" stroke="#08090b" stroke-width="16" stroke-linecap="round"/>
+          <path d="M92 76 C96 8 224 8 228 76" fill="none" stroke="#2c2f37" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="90" cy="82" r="32" fill="#0b0c0f"/>
+          <circle cx="230" cy="82" r="32" fill="#0b0c0f"/>
+          <circle cx="90" cy="82" r="23" fill="none" stroke="#2aa7ff" stroke-width="9" opacity=".5" filter="url(#leuchten)"/>
+          <circle cx="230" cy="82" r="23" fill="none" stroke="#2aa7ff" stroke-width="9" opacity=".5" filter="url(#leuchten)"/>
+          <circle cx="90" cy="82" r="23" fill="none" stroke="#2aa7ff" stroke-width="4.5"/>
+          <circle cx="230" cy="82" r="23" fill="none" stroke="#2aa7ff" stroke-width="4.5"/>
+          <circle cx="90" cy="82" r="6" fill="none" stroke="#2aa7ff" stroke-width="3"/>
+          <circle cx="230" cy="82" r="6" fill="none" stroke="#2aa7ff" stroke-width="3"/>
+        </g>
+      </svg>
+    </button>
+    <p class="hinweis">Tipp aufs Geschenk. Ton an!</p>
+  </section>
+
+  <section id="buehne" hidden>
+    <div class="rahmen">
+      <video id="video" controls playsinline preload="auto"></video>
+      <div id="yt" hidden></div>
+      <div id="laedt" hidden>Wird ausgepackt …</div>
+      <button id="start" type="button" hidden>Abspielen</button>
+    </div>
+    <div id="fehler" hidden>
+      <p>Das Video lädt gerade nicht. Lade die Seite bitte neu.</p>
+      <button id="weiter" class="leise" type="button">Direkt zur Nachricht</button>
+    </div>
+  </section>
+
+  <section id="karte" hidden aria-live="polite">
+    <svg class="winkel" viewBox="0 0 92 30" aria-hidden="true"><g fill="none" stroke="#f6f3ee" stroke-width="6"><path d="M4 26 L16 8 L28 26"/><path d="M34 26 L46 8 L58 26"/><path d="M64 26 L76 8 L88 26"/></g></svg>
+    <h1 id="titel"></h1>
+    <div id="text"></div>
+    <p id="von"></p>
+    <button id="nochmal" type="button">Nochmal ansehen</button>
+    <button id="selbst" type="button" hidden>Selbstzerstörung</button>
+  </section>
+</main>
+<canvas id="konfetti" aria-hidden="true"></canvas>
+
+<script src="einstellungen.js"></script>
+<script src="raid.js"></script>
+<script src="zerstoerung.js"></script>
+<script>
+(function () {
+  const C = window.GESCHENK || {};
+  const $ = (id) => document.getElementById(id);
+  const ruhig = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const szene = $('geschenk-szene'), knopf = $('oeffnen'), buehne = $('buehne');
+  const video = $('video'), karte = $('karte'), laedt = $('laedt'), start = $('start'), fehler = $('fehler');
+  const mitYoutube = !!C.youtubeId;
+  let gestartet = false, ytPlayer = null, ytBereit = false;
+
+  if (matchMedia('(orientation: portrait) and (max-width: 700px)').matches) {
+    document.querySelector('.hinweis').textContent = 'Tipp aufs Geschenk. Ton an und Handy quer!';
+  }
+  $('name').textContent = C.empfaenger || '';
+  $('titel').textContent = C.ueberschrift || '';
+  $('von').textContent = C.absender || '';
+  (C.nachricht || []).forEach((t) => {
+    const p = document.createElement('p');
+    p.textContent = t;
+    $('text').appendChild(p);
+  });
+
+  /* Konfetti */
+  const leinwand = $('konfetti'), ctx = leinwand.getContext('2d');
+  const farben = ['#2aa7ff', '#e8743b', '#f6f3ee', '#ffd24a', '#f0529c'];
+  let teile = [], laeuft = false;
+  function passen() {
+    const d = Math.min(devicePixelRatio || 1, 2);
+    leinwand.width = innerWidth * d; leinwand.height = innerHeight * d;
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  addEventListener('resize', passen); passen();
+  function konfetti(x, y, anzahl) {
+    if (ruhig) return;
+    for (let i = 0; i < anzahl; i++) {
+      const w = -Math.PI / 2 + (Math.random() - .5) * 2.1, v = 5 + Math.random() * 11;
+      teile.push({ x, y, vx: Math.cos(w) * v, vy: Math.sin(w) * v, b: 6 + Math.random() * 7, h: 9 + Math.random() * 8,
+        r: Math.random() * 6, dr: (Math.random() - .5) * .35, f: farben[i % farben.length], t: 1 });
+    }
+    if (!laeuft) { laeuft = true; requestAnimationFrame(schritt); }
+  }
+  function schritt() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    teile = teile.filter((p) => p.t > 0 && p.y < innerHeight + 30);
+    teile.forEach((p) => {
+      p.vy += .2; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.dr; p.t -= .005;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1, p.t * 3);
+      ctx.fillStyle = p.f; ctx.fillRect(-p.b / 2, -p.h / 2, p.b, p.h * Math.abs(Math.cos(p.r * 1.4))); ctx.restore();
+    });
+    if (teile.length) requestAnimationFrame(schritt);
+    else { laeuft = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+
+  /* Video vorbereiten */
+  if (mitYoutube) {
+    video.hidden = true; $('yt').hidden = false;
+    const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+    window.onYouTubeIframeAPIReady = () => {
+      ytPlayer = new YT.Player('yt', {
+        videoId: C.youtubeId,
+        playerVars: { rel: 0, playsinline: 1, modestbranding: 1 },
+        events: {
+          onReady: () => { ytBereit = true; },
+          onStateChange: (e) => { if (e.data === YT.PlayerState.ENDED) ende(); },
+          onError: zeigeFehler,
+        },
+      });
+    };
+  } else {
+    video.src = C.videoDatei;
+    video.addEventListener('ended', ende);
+    video.addEventListener('error', zeigeFehler);
+    video.addEventListener('waiting', () => { if (gestartet) laedt.hidden = false; });
+    video.addEventListener('playing', () => { laedt.hidden = true; start.hidden = true; });
+  }
+
+  function zeigeBuehne() {
+    buehne.hidden = false;
+    setTimeout(() => buehne.classList.add('da'), 30);
+  }
+
+  function zeigeFehler() {
+    laedt.hidden = true; start.hidden = true; fehler.hidden = false;
+  }
+  $('weiter').addEventListener('click', () => { gestartet = true; ende(); });
+
+  function abspielen() {
+    gestartet = true;
+    if (mitYoutube) { if (ytBereit) ytPlayer.playVideo(); return; }
+    video.muted = false;
+    laedt.hidden = false;
+    const p = video.play();
+    if (p) p.catch((err) => {
+      if (err && err.name === 'AbortError') return;
+      if (video.error || (err && err.name === 'NotSupportedError')) { zeigeFehler(); return; }
+      laedt.hidden = true; start.hidden = false; start.focus();
+    });
+  }
+  start.addEventListener('click', abspielen);
+
+  function oeffnen() {
+    if (knopf.disabled) return;
+    knopf.disabled = true;
+    knopf.classList.remove('ruht');
+    knopf.classList.add('oeffnet');
+    /* Der Klick schaltet die Wiedergabe mit Ton frei, gestartet wird nach der Animation. */
+    if (mitYoutube) {
+      abspielen();
+    } else {
+      const p = video.play();
+      if (p) p.then(() => { if (!gestartet) { video.pause(); video.currentTime = 0; } }).catch(() => {});
+    }
+    const warte = ruhig ? 0 : 420;
+    setTimeout(() => {
+      knopf.classList.add('offen');
+      const r = knopf.getBoundingClientRect();
+      konfetti(r.left + r.width / 2, r.top + r.height * .4, 130);
+    }, warte);
+    setTimeout(() => {
+      szene.classList.add('weg');
+      setTimeout(() => {
+        szene.hidden = true; zeigeBuehne();
+        if (!mitYoutube) abspielen();
+      }, ruhig ? 0 : 380);
+    }, ruhig ? 200 : 1500);
+  }
+  knopf.addEventListener('click', oeffnen);
+
+  function ende() {
+    if (!gestartet) return;
+    gestartet = false;
+    buehne.hidden = true; buehne.classList.remove('da');
+    karte.hidden = false;
+    konfetti(innerWidth * .25, innerHeight * .75, 90);
+    konfetti(innerWidth * .75, innerHeight * .75, 90);
+    $('nochmal').focus({ preventScroll: true });
+  }
+
+  $('nochmal').addEventListener('click', () => {
+    karte.hidden = true; zeigeBuehne();
+    if (mitYoutube) { gestartet = true; ytPlayer.seekTo(0); ytPlayer.playVideo(); }
+    else { video.currentTime = 0; abspielen(); }
+  });
+
+  /* Selbstzerstörung ist nur ein Gag. Fehlt das Skript, bleibt der Knopf einfach weg. */
+  if (C.selbstzerstoerung !== false && window.Selbstzerstoerung) {
+    const sb = $('selbst');
+    sb.hidden = false;
+    sb.addEventListener('click', () => {
+      window.Selbstzerstoerung.start({
+        konfetti,
+        zurueck: () => { karte.hidden = false; sb.focus({ preventScroll: true }); },
+      });
+    });
+  }
+
+  /* Erst der Raid, dann das Geschenk. Läuft das Spiel nicht, kommt direkt das Geschenk. */
+  if (C.spiel !== false && window.Raid) {
+    szene.hidden = true;
+    try {
+      window.Raid.start($('raid'), () => { szene.hidden = false; knopf.focus({ preventScroll: true }); });
+    } catch (e) {
+      $('raid').hidden = true; szene.hidden = false;
+    }
+  }
+})();
+</script>
+</body>
+</html>
